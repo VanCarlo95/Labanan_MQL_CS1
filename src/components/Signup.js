@@ -1,16 +1,20 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+// import bg from "assets/orange_bg.jpg"; // Import your background image
 
 function Signup() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const user = { username, password, role };
+    const user = { firstname, lastname, username, password, role };
 
     axios
       .post("http://localhost:3001/create", user)
@@ -36,8 +40,8 @@ function Signup() {
                   <input
                     className="form-control"
                     type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    value={firstname}
+                    onChange={(e) => setFirstname(e.target.value)}
                     required
                   />
                 </div>
@@ -46,8 +50,19 @@ function Signup() {
                   <input
                     className="form-control"
                     type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    value={lastname}
+                    onChange={(e) => setLastname(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Email</label>
+                  <input
+                    className="form-control"
+                    type="text"
+                    placeholder="@gmail.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     required
                   />
                 </div>

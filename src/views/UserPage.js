@@ -1,22 +1,4 @@
-/*!
-
-=========================================================
-* Now UI Dashboard React - v1.5.2
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/now-ui-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/now-ui-dashboard-react/blob/main/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-import React from "react";
-
+import React, { useState, useEffect } from "react";
 // reactstrap components
 import {
   Button,
@@ -30,10 +12,56 @@ import {
   Col,
 } from "reactstrap";
 
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 // core components
 import PanelHeader from "components/PanelHeader/PanelHeader.js";
 
+import kid from "assets/kid.png";
+import bg from "assets/bg.jpg";
+
 function User() {
+  const [user, setUser] = useState({});
+  const [editUser, setEditUser] = useState({
+    id: "",
+    firstname: "",
+    lastname: "",
+    address: "",
+    about: "",
+    username: "",
+  });
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001");
+        setUser(response.data[0]); // Access the first user object from the response array
+        setEditUser(response.data[0]); // Set editUser state
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
+        // navigate("/login");
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditUser({ ...editUser, [name]: value });
+  };
+
+  const handleUpdateUser = () => {
+    axios
+      .put(`http://localhost:3001/update/${editUser.id}`, editUser)
+      .then((res) => {
+        console.log("User updated successfully");
+        setUser(editUser); // Update the user state
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <>
       <PanelHeader size="sm" />
@@ -49,12 +77,13 @@ function User() {
                   <Row>
                     <Col className="pr-1" md="5">
                       <FormGroup>
-                        <label>Company (disabled)</label>
+                        <label>Company</label>
                         <Input
-                          defaultValue="Creative Code Inc."
+                          defaultValue={user.company}
                           disabled
                           placeholder="Company"
                           type="text"
+                          name="company"
                         />
                       </FormGroup>
                     </Col>
@@ -62,18 +91,24 @@ function User() {
                       <FormGroup>
                         <label>Username</label>
                         <Input
-                          defaultValue="michael23"
+                          value={editUser.username}
                           placeholder="Username"
                           type="text"
+                          name="username"
+                          onChange={handleInputChange}
                         />
                       </FormGroup>
                     </Col>
                     <Col className="pl-1" md="4">
                       <FormGroup>
-                        <label htmlFor="exampleInputEmail1">
-                          Email address
-                        </label>
-                        <Input placeholder="Email" type="email" />
+                        <label>Email address</label>
+                        <Input
+                          value={editUser.email}
+                          placeholder="@gmail.com"
+                          type="email"
+                          name="email"
+                          onChange={handleInputChange}
+                        />
                       </FormGroup>
                     </Col>
                   </Row>
@@ -82,9 +117,11 @@ function User() {
                       <FormGroup>
                         <label>First Name</label>
                         <Input
-                          defaultValue="Mike"
-                          placeholder="Company"
+                          value={editUser.firstname}
+                          placeholder="First Name"
                           type="text"
+                          name="firstname"
+                          onChange={handleInputChange}
                         />
                       </FormGroup>
                     </Col>
@@ -92,9 +129,11 @@ function User() {
                       <FormGroup>
                         <label>Last Name</label>
                         <Input
-                          defaultValue="Andrew"
+                          value={editUser.lastname}
                           placeholder="Last Name"
                           type="text"
+                          name="lastname"
+                          onChange={handleInputChange}
                         />
                       </FormGroup>
                     </Col>
@@ -104,56 +143,41 @@ function User() {
                       <FormGroup>
                         <label>Address</label>
                         <Input
-                          defaultValue="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09"
+                          value={editUser.address}
                           placeholder="Home Address"
                           type="text"
+                          name="address"
+                          onChange={handleInputChange}
                         />
                       </FormGroup>
                     </Col>
                   </Row>
                   <Row>
-                    <Col className="pr-1" md="4">
-                      <FormGroup>
-                        <label>City</label>
-                        <Input
-                          defaultValue="Mike"
-                          placeholder="City"
-                          type="text"
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col className="px-1" md="4">
-                      <FormGroup>
-                        <label>Country</label>
-                        <Input
-                          defaultValue="Andrew"
-                          placeholder="Country"
-                          type="text"
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col className="pl-1" md="4">
-                      <FormGroup>
-                        <label>Postal Code</label>
-                        <Input placeholder="ZIP Code" type="number" />
-                      </FormGroup>
-                    </Col>
                   </Row>
                   <Row>
                     <Col md="12">
                       <FormGroup>
                         <label>About Me</label>
                         <Input
+                          value={editUser.about}
                           cols="80"
-                          defaultValue="Lamborghini Mercy, Your chick she so thirsty, I'm in
-                            that two seat Lambo."
                           placeholder="Here can be your description"
                           rows="4"
                           type="textarea"
+                          name="about"
+                          onChange={handleInputChange}
                         />
                       </FormGroup>
                     </Col>
                   </Row>
+                  <div className="text-center">
+                    <Button
+                      className="btn btn-primary"
+                      onClick={handleUpdateUser}
+                    >
+                      Update Profile
+                    </Button>
+                  </div>
                 </Form>
               </CardBody>
             </Card>
@@ -161,32 +185,33 @@ function User() {
           <Col md="4">
             <Card className="card-user">
               <div className="image">
-                <img alt="..." src={require("assets/img/bg5.jpg").default} />
+                <img alt="..." src={bg} />
               </div>
               <CardBody>
                 <div className="author">
-                  <a href="#pablo" onClick={(e) => e.preventDefault()}>
+                  <a
+                    href="https://github.com/VanCarlo95"
+                    onClick={(e) => e.preventDefault()}
+                  >
                     <img
                       alt="..."
                       className="avatar border-gray"
-                      src={require("assets/img/mike.jpg").default}
+                      src={kid}
                     />
-                    <h5 className="title">Mike Andrew</h5>
+                    <h5 className="title">
+                      {user.firstname + " " + user.lastname}
+                    </h5>
                   </a>
-                  <p className="description">michael24</p>
+                  <p className="description">{user.username}</p>
                 </div>
-                <p className="description text-center">
-                  "Lamborghini Mercy <br />
-                  Your chick she so thirsty <br />
-                  I'm in that two seat Lambo"
-                </p>
+                <p className="description text-center">"ChatGPT Expert"</p>
               </CardBody>
               <hr />
               <div className="button-container">
                 <Button
                   className="btn-neutral btn-icon btn-round"
                   color="default"
-                  href="#pablo"
+                  href="https://github.com/VanCarlo95"
                   onClick={(e) => e.preventDefault()}
                   size="lg"
                 >
@@ -195,7 +220,7 @@ function User() {
                 <Button
                   className="btn-neutral btn-icon btn-round"
                   color="default"
-                  href="#pablo"
+                  href="https://github.com/VanCarlo95"
                   onClick={(e) => e.preventDefault()}
                   size="lg"
                 >
@@ -204,7 +229,7 @@ function User() {
                 <Button
                   className="btn-neutral btn-icon btn-round"
                   color="default"
-                  href="#pablo"
+                  href="https://github.com/VanCarlo95"
                   onClick={(e) => e.preventDefault()}
                   size="lg"
                 >

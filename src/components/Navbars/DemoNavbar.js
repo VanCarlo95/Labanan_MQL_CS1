@@ -122,16 +122,6 @@ function DemoNavbar(props) {
           <span className="navbar-toggler-bar navbar-kebab" />
         </NavbarToggler>
         <Collapse isOpen={isOpen} navbar className="justify-content-end">
-          <form>
-            <InputGroup className="no-border">
-              <Input placeholder="Search..." />
-              <InputGroupAddon addonType="append">
-                <InputGroupText>
-                  <i className="now-ui-icons ui-1_zoom-bold" />
-                </InputGroupText>
-              </InputGroupAddon>
-            </InputGroup>
-          </form>
           <Nav navbar>
             <NavItem>
               <Link to="#pablo" className="nav-link">
@@ -142,11 +132,11 @@ function DemoNavbar(props) {
               </Link>
             </NavItem>
             <NavItem>
-            <Link to="#pablo" className="nav-link">
-              <i className="now-ui-icons location_world" />
-              <p>
-                <span className="d-lg-none d-md-block">Some Actions</span>
-              </p>
+              <Link to="#pablo" className="nav-link">
+                <i className="now-ui-icons location_world" />
+                <p>
+                  <span className="d-lg-none d-md-block">Some Actions</span>
+                </p>
               </Link>
             </NavItem>
             <Dropdown
@@ -154,19 +144,29 @@ function DemoNavbar(props) {
               isOpen={dropdownOpen}
               toggle={(e) => dropdownToggle(e)}
             >
-              
               <DropdownToggle caret nav>
                 <i className="now-ui-icons users_single-02" />
                 <p>
                   <span className="d-lg-none d-md-block">Account</span>
                 </p>
-                
               </DropdownToggle>
-                <DropdownMenu right>
-                  <DropdownItem> <Link to="./user-page" className="dropdown-item"></Link>User Profile</DropdownItem>
-                  <DropdownItem> <Link to="/user-page" className="dropdown-item"></Link>Help</DropdownItem>
-                  <DropdownItem> <Link to="/login" className="dropdown-item"></Link>Logout</DropdownItem>
-                </DropdownMenu>
+              <DropdownMenu right>
+                <DropdownItem>
+                  {" "}
+                  <Link to="./user-page" className="dropdown-item"></Link>
+                  User Profile
+                </DropdownItem>
+                <DropdownItem>
+                  {" "}
+                  <Link to="/user-page" className="dropdown-item"></Link>
+                  Help
+                </DropdownItem>
+                <DropdownItem>
+                  {" "}
+                  <Link to="/login" className="dropdown-item"></Link>
+                  Logout
+                </DropdownItem>
+              </DropdownMenu>
             </Dropdown>
           </Nav>
         </Collapse>

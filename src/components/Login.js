@@ -15,6 +15,15 @@ function Login() {
       .post("http://localhost:3001/login", user)
       .then((res) => {
         console.log(res.data);
+        // const role = res.data.role;
+        // if (role === "admin") {
+          
+        // } else if (role === "user") {
+        //   navigate("/general/dashboard");
+        // } else {
+        //   console.log("Unknown role:", role);
+        // }
+        
         navigate("/admin/dashboard");
       })
       .catch((err) => console.log(err));
@@ -52,9 +61,9 @@ function Login() {
                   />
                 </div>
                 <div className="text-center">
-                <button className="btn btn-primary" type="submit">
-                  Login
-                </button>
+                  <button className="btn btn-primary" type="submit">
+                    Login
+                  </button>
                 </div>
                 <div className="mt-3 text-center">
                   Don't Have an Account? <Link to="/signup">Sign Up</Link>

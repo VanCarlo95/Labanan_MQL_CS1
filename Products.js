@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
-  role: String,
-  username: String,
-  password: String
+  productname: String,
+  quantity: String,
+  price: String,
+  sales: String,
+  prodimage: String
 })
 
 const ProdModel = mongoose.model("cs1Prod", UserSchema)

@@ -1,380 +1,216 @@
-/*!
+import React, { useState, useEffect } from "react";
+import { Bar, Line } from "react-chartjs-2";
+import axios from "axios";
 
-=========================================================
-* Now UI Dashboard React - v1.5.2
-=========================================================
 
-* Product Page: https://www.creative-tim.com/product/now-ui-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/now-ui-dashboard-react/blob/main/LICENSE.md)
+const Dashboard = () => {
+  const [products, setProducts] = useState([]);
 
-* Coded by Creative Tim
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await axios("http://localhost:3001/prod");
+      setProducts(result.data);
+    };
+    fetchData();
+  }, []);
 
-=========================================================
+  const productNames = products.map((item) => item.productname);
+  const sales = products.map((item) => parseFloat(item.sales));
+  const quantities = products.map((item) => parseInt(item.quantity));
+  const prices = products.map((item) => parseFloat(item.price));
 
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+  const lineChartData = {
+    labels: productNames,
+    datasets: [
+      {
+        label: "Sales",
+        borderColor: "#FFFFFF",
+        pointBorderColor: "#FFFFFF",
+        pointBackgroundColor: "#2c2c2c",
+        pointHoverBackgroundColor: "#2c2c2c",
+        pointHoverBorderColor: "#FFFFFF",
+        pointBorderWidth: 1,
+        pointHoverRadius: 7,
+        pointHoverBorderWidth: 2,
+        pointRadius: 5,
+        fill: true,
+        backgroundColor: "rgba(0, 0, 0, 0.2)", // Black background color for line chart
+        borderWidth: 2,
+        tension: 0.4,
+        data: sales,
+      },
+    ],
+  };
 
-*/
-import React from "react";
-// react plugin used to create charts
-import { Line, Bar } from "react-chartjs-2";
+  const barChartQuantitiesData = {
+    labels: productNames,
+    datasets: [
+      {
+        label: "Quantity",
+        backgroundColor: "rgba(75,192,192,0.2)",
+        borderColor: "rgba(75,192,192,1)",
+        borderWidth: 2,
+        data: quantities,
+      },
+    ],
+  };
 
-// reactstrap components
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  CardTitle,
-  Row,
-  Col,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Table,
-  Button,
-  Label,
-  FormGroup,
-  Input,
-  UncontrolledTooltip,
-} from "reactstrap";
+  const barChartPricesData = {
+    labels: productNames,
+    datasets: [
+      {
+        label: "Price",
+        backgroundColor: "rgba(255,99,132,0.2)",
+        borderColor: "rgba(255,99,132,1)",
+        borderWidth: 2,
+        data: prices,
+      },
+    ],
+  };
 
-// core components
-import PanelHeader from "components/PanelHeader/PanelHeader.js";
-
-import {
-  dashboardPanelChart,
-  dashboardShippedProductsChart,
-  dashboardAllProductsChart,
-  dashboard24HoursPerformanceChart,
-} from "variables/charts.js";
-
-function Dashboard() {
   return (
-    <>
-      <PanelHeader
-        size="lg"
-        content={
+    <div>
+      <div className="content" style={{ background: "#252525", paddingTop: "50px", height: "97vh" }}> {/* Gray background color and padding top */}
+        <div className="container-fluid">
+          <h2 style={{ color: "#FFF" }}>Top Selling Product</h2> {/* Changed text color */}
           <Line
-            data={dashboardPanelChart.data}
-            options={dashboardPanelChart.options}
+            data={lineChartData}
+            options={{
+              title: {
+                display: true,
+                text: "Sales by Product",
+                fontSize: 20,
+                color: "#FFF", // Added text color
+              },
+              legend: {
+                display: true,
+                position: "right",
+                labels: {
+                  color: "#FFF", // Added text color
+                },
+              },
+              scales: {
+                y: {
+                  ticks: {
+                    fontColor: "rgba(255,255,255,0.4)",
+                    fontStyle: "bold",
+                    beginAtZero: true,
+                    maxTicksLimit: 5,
+                    padding: 10,
+                  },
+                  grid: {
+                    drawTicks: true,
+                    drawBorder: false,
+                    display: true,
+                    color: "rgba(255,255,255,0.1)",
+                    zeroLineColor: "transparent",
+                  },
+                },
+                x: {
+                  display: false, // Removed x-axis labels
+                },
+              },
+              layout: {
+                padding: { left: 20, right: 20, top: 10, bottom: 0 },
+              },
+            }}
           />
-        }
-      />
-      <div className="content">
-        <Row>
-          <Col xs={12} md={4}>
-            <Card className="card-chart">
-              <CardHeader>
-                <h5 className="card-category">Global Sales</h5>
-                <CardTitle tag="h4">Shipped Products</CardTitle>
-                <UncontrolledDropdown>
-                  <DropdownToggle
-                    className="btn-round btn-outline-default btn-icon"
-                    color="default"
-                  >
-                    <i className="now-ui-icons loader_gear" />
-                  </DropdownToggle>
-                  <DropdownMenu right>
-                    <DropdownItem>Action</DropdownItem>
-                    <DropdownItem>Another Action</DropdownItem>
-                    <DropdownItem>Something else here</DropdownItem>
-                    <DropdownItem className="text-danger">
-                      Remove data
-                    </DropdownItem>
-                  </DropdownMenu>
-                </UncontrolledDropdown>
-              </CardHeader>
-              <CardBody>
-                <div className="chart-area">
-                  <Line
-                    data={dashboardShippedProductsChart.data}
-                    options={dashboardShippedProductsChart.options}
-                  />
-                </div>
-              </CardBody>
-              <CardFooter>
-                <div className="stats">
-                  <i className="now-ui-icons arrows-1_refresh-69" /> Just
-                  Updated
-                </div>
-              </CardFooter>
-            </Card>
-          </Col>
-          <Col xs={12} md={4}>
-            <Card className="card-chart">
-              <CardHeader>
-                <h5 className="card-category">2021 Sales</h5>
-                <CardTitle tag="h4">All products</CardTitle>
-                <UncontrolledDropdown>
-                  <DropdownToggle
-                    className="btn-round btn-outline-default btn-icon"
-                    color="default"
-                  >
-                    <i className="now-ui-icons loader_gear" />
-                  </DropdownToggle>
-                  <DropdownMenu right>
-                    <DropdownItem>Action</DropdownItem>
-                    <DropdownItem>Another Action</DropdownItem>
-                    <DropdownItem>Something else here</DropdownItem>
-                    <DropdownItem className="text-danger">
-                      Remove data
-                    </DropdownItem>
-                  </DropdownMenu>
-                </UncontrolledDropdown>
-              </CardHeader>
-              <CardBody>
-                <div className="chart-area">
-                  <Line
-                    data={dashboardAllProductsChart.data}
-                    options={dashboardAllProductsChart.options}
-                  />
-                </div>
-              </CardBody>
-              <CardFooter>
-                <div className="stats">
-                  <i className="now-ui-icons arrows-1_refresh-69" /> Just
-                  Updated
-                </div>
-              </CardFooter>
-            </Card>
-          </Col>
-          <Col xs={12} md={4}>
-            <Card className="card-chart">
-              <CardHeader>
-                <h5 className="card-category">Email Statistics</h5>
-                <CardTitle tag="h4">24 Hours Performance</CardTitle>
-              </CardHeader>
-              <CardBody>
-                <div className="chart-area">
-                  <Bar
-                    data={dashboard24HoursPerformanceChart.data}
-                    options={dashboard24HoursPerformanceChart.options}
-                  />
-                </div>
-              </CardBody>
-              <CardFooter>
-                <div className="stats">
-                  <i className="now-ui-icons ui-2_time-alarm" /> Last 7 days
-                </div>
-              </CardFooter>
-            </Card>
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12} md={6}>
-            <Card className="card-tasks">
-              <CardHeader>
-                <h5 className="card-category">Backend Development</h5>
-                <CardTitle tag="h4">Tasks</CardTitle>
-              </CardHeader>
-              <CardBody>
-                <div className="table-full-width table-responsive">
-                  <Table>
-                    <tbody>
-                      <tr>
-                        <td>
-                          <FormGroup check>
-                            <Label check>
-                              <Input defaultChecked type="checkbox" />
-                              <span className="form-check-sign" />
-                            </Label>
-                          </FormGroup>
-                        </td>
-                        <td className="text-left">
-                          Sign contract for "What are conference organizers
-                          afraid of?"
-                        </td>
-                        <td className="td-actions text-right">
-                          <Button
-                            className="btn-round btn-icon btn-icon-mini btn-neutral"
-                            color="info"
-                            id="tooltip731609871"
-                            type="button"
-                          >
-                            <i className="now-ui-icons ui-2_settings-90" />
-                          </Button>
-                          <UncontrolledTooltip
-                            delay={0}
-                            target="tooltip731609871"
-                          >
-                            Edit Task
-                          </UncontrolledTooltip>
-                          <Button
-                            className="btn-round btn-icon btn-icon-mini btn-neutral"
-                            color="danger"
-                            id="tooltip923217206"
-                            type="button"
-                          >
-                            <i className="now-ui-icons ui-1_simple-remove" />
-                          </Button>
-                          <UncontrolledTooltip
-                            delay={0}
-                            target="tooltip923217206"
-                          >
-                            Remove
-                          </UncontrolledTooltip>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <FormGroup check>
-                            <Label check>
-                              <Input type="checkbox" />
-                              <span className="form-check-sign" />
-                            </Label>
-                          </FormGroup>
-                        </td>
-                        <td className="text-left">
-                          Lines From Great Russian Literature? Or E-mails From
-                          My Boss?
-                        </td>
-                        <td className="td-actions text-right">
-                          <Button
-                            className="btn-round btn-icon btn-icon-mini btn-neutral"
-                            color="info"
-                            id="tooltip907509347"
-                            type="button"
-                          >
-                            <i className="now-ui-icons ui-2_settings-90" />
-                          </Button>
-                          <UncontrolledTooltip
-                            delay={0}
-                            target="tooltip907509347"
-                          >
-                            Edit Task
-                          </UncontrolledTooltip>
-                          <Button
-                            className="btn-round btn-icon btn-icon-mini btn-neutral"
-                            color="danger"
-                            id="tooltip496353037"
-                            type="button"
-                          >
-                            <i className="now-ui-icons ui-1_simple-remove" />
-                          </Button>
-                          <UncontrolledTooltip
-                            delay={0}
-                            target="tooltip496353037"
-                          >
-                            Remove
-                          </UncontrolledTooltip>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <FormGroup check>
-                            <Label check>
-                              <Input defaultChecked type="checkbox" />
-                              <span className="form-check-sign" />
-                            </Label>
-                          </FormGroup>
-                        </td>
-                        <td className="text-left">
-                          Flooded: One year later, assessing what was lost and
-                          what was found when a ravaging rain swept through
-                          metro Detroit
-                        </td>
-                        <td className="td-actions text-right">
-                          <Button
-                            className="btn-round btn-icon btn-icon-mini btn-neutral"
-                            color="info"
-                            id="tooltip326247652"
-                            type="button"
-                          >
-                            <i className="now-ui-icons ui-2_settings-90" />
-                          </Button>
-                          <UncontrolledTooltip
-                            delay={0}
-                            target="tooltip326247652"
-                          >
-                            Edit Task
-                          </UncontrolledTooltip>
-                          <Button
-                            className="btn-round btn-icon btn-icon-mini btn-neutral"
-                            color="danger"
-                            id="tooltip389516969"
-                            type="button"
-                          >
-                            <i className="now-ui-icons ui-1_simple-remove" />
-                          </Button>
-                          <UncontrolledTooltip
-                            delay={0}
-                            target="tooltip389516969"
-                          >
-                            Remove
-                          </UncontrolledTooltip>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </Table>
-                </div>
-              </CardBody>
-              <CardFooter>
-                <hr />
-                <div className="stats">
-                  <i className="now-ui-icons loader_refresh spin" /> Updated 3
-                  minutes ago
-                </div>
-              </CardFooter>
-            </Card>
-          </Col>
-          <Col xs={12} md={6}>
-            <Card>
-              <CardHeader>
-                <h5 className="card-category">All Persons List</h5>
-                <CardTitle tag="h4">Employees Stats</CardTitle>
-              </CardHeader>
-              <CardBody>
-                <Table responsive>
-                  <thead className="text-primary">
-                    <tr>
-                      <th>Name</th>
-                      <th>Country</th>
-                      <th>City</th>
-                      <th className="text-right">Salary</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Dakota Rice</td>
-                      <td>Niger</td>
-                      <td>Oud-Turnhout</td>
-                      <td className="text-right">$36,738</td>
-                    </tr>
-                    <tr>
-                      <td>Minerva Hooper</td>
-                      <td>Curaçao</td>
-                      <td>Sinaai-Waas</td>
-                      <td className="text-right">$23,789</td>
-                    </tr>
-                    <tr>
-                      <td>Sage Rodriguez</td>
-                      <td>Netherlands</td>
-                      <td>Baileux</td>
-                      <td className="text-right">$56,142</td>
-                    </tr>
-                    <tr>
-                      <td>Doris Greene</td>
-                      <td>Malawi</td>
-                      <td>Feldkirchen in Kärnten</td>
-                      <td className="text-right">$63,542</td>
-                    </tr>
-                    <tr>
-                      <td>Mason Porter</td>
-                      <td>Chile</td>
-                      <td>Gloucester</td>
-                      <td className="text-right">$78,615</td>
-                    </tr>
-                  </tbody>
-                </Table>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div style={{ width: "50%" }}>
+              <h2 style={{ color: "#FFF" }}>Quantity</h2> {/* Changed text color */}
+              <Bar
+                data={barChartQuantitiesData}
+                options={{
+                  title: {
+                    display: true,
+                    text: "Quantity by Product",
+                    fontSize: 16,
+                    color: "#FFF", // Added text color
+                  },
+                  legend: {
+                    display: true,
+                    position: "right",
+                    labels: {
+                      color: "#FFF", // Added text color
+                    },
+                  },
+                  scales: {
+                    y: {
+                      ticks: {
+                        fontColor: "rgba(255,255,255,0.4)",
+                        fontStyle: "bold",
+                        beginAtZero: true,
+                        maxTicksLimit: 5,
+                        padding: 10,
+                      },
+                      grid: {
+                        drawTicks: true,
+                        drawBorder: false,
+                        display: true,
+                        color: "rgba(255,255,255,0.1)",
+                        zeroLineColor: "transparent",
+                      },
+                    },
+                    x: {
+                      display: false, // Removed x-axis labels
+                    },
+                  },
+                }}
+              />
+            </div>
+            <div style={{ width: "50%" }}>
+              <h2 style={{ color: "#FFF" }}>Prices</h2> {/* Changed text color */}
+              <Bar
+                data={barChartPricesData}
+                options={{
+                  title: {
+                    display: true,
+                    text: "Prices by Product",
+                    fontSize: 16,
+                    color: "#FFF", // Added text color
+                  },
+                  legend: {
+                    display: true,
+                    position: "right",
+                    labels: {
+                      color: "#FFF", // Added text color
+                    },
+                  },
+                  scales: {
+                    y: {
+                      ticks: {
+                        fontColor: "rgba(255,255,255,0.4)",
+                        fontStyle: "bold",
+                        beginAtZero: true,
+                        maxTicksLimit: 5,
+                        padding: 10,
+                      },
+                      grid: {
+                        drawTicks: true,
+                        drawBorder: false,
+                        display: true,
+                        color: "rgba(255,255,255,0.1)",
+                        zeroLineColor: "transparent",
+                      },
+                    },
+                    x: {
+                      display: false, // Removed x-axis labels
+                    },
+                  },
+                  layout: {
+                    padding: { left: 20, right: 20, top: 10, bottom: 0 },
+                  },
+                }}
+              />
+            </div>
+          </div>
+        </div>
       </div>
-    </>
+      <div className="content" style={{ background: "#FFFFFF", height: "50vh" }}> {/* White background color */}
+
+      </div>
+    </div>
   );
-}
+};
 
 export default Dashboard;

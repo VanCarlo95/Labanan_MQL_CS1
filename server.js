@@ -65,17 +65,66 @@ app.post('/login', (req, res) => {
   UserModel.findOne({ username, password })
     .then(user => {
       if (user) {
-        res.json({ message: "Login successful" });
+        res.json({ user, message: "Login Successful" });
       } else {
         res.status(401).json({ message: "Invalid username or password" });
       }
     })
     .catch(err => res.json(err));
-});
+});;
 
 //==============================================================
+app.get('/prod', (req, res) => {
+  ProdModel.find()
+    .then(product => res.json(product))
+    .catch(err => res.json(err))
+})
+
+app.get('/getprod/:id', (req, res) => {
+  const id = req.params.id;
+  ProdModel.findById(id)
+    .then(product => res.json(product))
+    .catch(err => res.status(404).json({ message: "Product not found" }));
+});
+
+app.post('/createprod',(req, res) =>{
+  ProdModel.create(req.body)
+  .then(user => res.json(user))
+  .catch(err => res.json(err))
+})
+
+app.put('/updateprod/:id', (req, res) => {
+const id = req.params.id;
+ProdModel.findByIdAndUpdate({_id: id}, {
+  productname: req.body.productname,
+  quantity: req.body.quantity,
+  sales: req.body.sales
+}).then(user => res.json(user))
+  .catch(err => res.json(err))
+})
+
+app.delete('/deleteprod/:id', (req, res) => {
+const id = req.params.id;
+ProdModel.findByIdAndDelete({_id: id})
+  .then(response => res.json(response))
+  .catch(err => res.json(err))
+})
+
+// New endpoint for fetching chart data
+app.get('/chart-data', async (req, res) => {
+  try {
+    const salesData = await ProdModel.find({}, { productname: 1, sales: 1, _id: 0 });
+    const chartData = salesData.map((data) => ({
+      month: data.productname,
+      sales: parseFloat(data.sales),
+    }));
+    res.json(chartData);
+  } catch (error) {
+    console.error("Error fetching sales data:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
-
