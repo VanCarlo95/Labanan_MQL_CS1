@@ -70,7 +70,7 @@ const Dashboard = () => {
 
   return (
     <div>
-      <div className="content" style={{ background: "#252525", paddingTop: "50px", height: "97vh" }}> {/* Gray background color and padding top */}
+      <div className="content" style={{ background: "#252525", paddingTop: "50px", height: "105vh" }}> {/* Gray background color and padding top */}
         <div className="container-fluid">
           <h2 style={{ color: "#FFF" }}>Top Selling Product</h2> {/* Changed text color */}
           <Line
@@ -117,7 +117,7 @@ const Dashboard = () => {
           />
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div style={{ width: "50%" }}>
-              <h2 style={{ color: "#FFF" }}>Quantity</h2> {/* Changed text color */}
+              <h2 style={{ color: "#000000" }}>Quantity</h2> {/* Changed text color */}
               <Bar
                 data={barChartQuantitiesData}
                 options={{
@@ -159,7 +159,7 @@ const Dashboard = () => {
               />
             </div>
             <div style={{ width: "50%" }}>
-              <h2 style={{ color: "#FFF" }}>Prices</h2> {/* Changed text color */}
+              <h2 style={{ color: "#000000" }}>Prices</h2> {/* Changed text color */}
               <Bar
                 data={barChartPricesData}
                 options={{

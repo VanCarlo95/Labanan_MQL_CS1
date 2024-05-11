@@ -1,20 +1,3 @@
-/*!
-
-=========================================================
-* Now UI Dashboard React - v1.5.2
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/now-ui-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/now-ui-dashboard-react/blob/main/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import React from "react";
 // react plugin for creating notifications over the dashboard
 import NotificationAlert from "react-notification-alert";
@@ -81,35 +64,24 @@ function Notifications() {
         content={
           <div className="header text-center">
             <h2 className="title">Notifications</h2>
-            <p className="category">
-              Please Checkout{" "}
-              <a
-                href="https://github.com/creativetimofficial/react-notification-alert"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                The Full Documentation
-              </a>
-              .
-            </p>
           </div>
         }
       />
-      <div className="content">
+      <div className="content text" >
         <NotificationAlert ref={notificationAlert} />
         <Row>
           <Col md={6} xs={12}>
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Notifications Style</CardTitle>
+
               </CardHeader>
               <CardBody>
-                <Alert color="info">
+                {/* <Alert color="info">
                   <span>This is a plain notification</span>
                 </Alert>
                 <Alert color="info" isOpen={true} toggle={() => {}}>
                   <span>This is a notification with close button.</span>
-                </Alert>
+                </Alert> */}
                 <Alert
                   color="info"
                   className="alert-with-icon"
@@ -121,7 +93,7 @@ function Notifications() {
                     className="now-ui-icons ui-1_bell-53"
                   />
                   <span data-notify="message">
-                    This is a notification with close button and icon.
+                    Product Shipment to arrive in the next 24 days.
                   </span>
                 </Alert>
                 <Alert
@@ -135,17 +107,14 @@ function Notifications() {
                     className="now-ui-icons ui-1_bell-53"
                   />
                   <span data-notify="message">
-                    This is a notification with close button and icon and have
-                    many lines. You can see that the icon and the close button
-                    are always vertically aligned. This is a beautiful
-                    notification. So you don't have to worry about the style.
+                    Pre-ordered products to supplier processed succesfully.
                   </span>
                 </Alert>
               </CardBody>
             </Card>
           </Col>
           <Col md={6} xs={12}>
-            <Card>
+            {/* <Card>
               <CardHeader>
                 <CardTitle tag="h4">Notification states</CardTitle>
               </CardHeader>
@@ -181,9 +150,9 @@ function Notifications() {
                   </span>
                 </Alert>
               </CardBody>
-            </Card>
+            </Card> */}
           </Col>
-          <Col md={12} xs={12}>
+          {/* <Col md={12} xs={12}>
             <Card>
               <CardBody>
                 <div className="places-buttons">
@@ -264,7 +233,7 @@ function Notifications() {
                 </div>
               </CardBody>
             </Card>
-          </Col>
+          </Col> */}
         </Row>
       </div>
     </>

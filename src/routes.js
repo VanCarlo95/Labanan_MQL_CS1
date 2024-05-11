@@ -31,7 +31,7 @@ var dashRoutes = [
   },
   {
     path: "/user-page",
-    name: "User Profile",
+    name: "Admin Profile",
     icon: "users_single-02",
     component: <UserPage />,
     layout: "/admin",
